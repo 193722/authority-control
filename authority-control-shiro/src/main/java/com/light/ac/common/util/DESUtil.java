@@ -2,10 +2,9 @@ package com.light.ac.common.util;
 
 import java.security.Key;
 import java.security.SecureRandom;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 public class DESUtil {
 
@@ -33,13 +32,13 @@ public class DESUtil {
 	 * @return
 	 */
 	public static String getEncryptString(String str) {
-		BASE64Encoder base64encoder = new BASE64Encoder();
+		Base64.Encoder base64encoder = Base64.getEncoder();
 		try {
 			byte[] bytes = str.getBytes(CHARSETNAME);
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 			byte[] doFinal = cipher.doFinal(bytes);
-			return base64encoder.encode(doFinal);
+			return base64encoder.encodeToString(doFinal);
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw new RuntimeException(e);
@@ -52,9 +51,9 @@ public class DESUtil {
 	 * @return
 	 */
 	public static String getDecryptString(String str) {
-		BASE64Decoder base64decoder = new BASE64Decoder();
+		Base64.Decoder base64decoder = Base64.getDecoder();
 		try {
-			byte[] bytes = base64decoder.decodeBuffer(str);
+			byte[] bytes = base64decoder.decode(str);
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] doFinal = cipher.doFinal(bytes);
@@ -63,7 +62,7 @@ public class DESUtil {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(getEncryptString("root"));
 		System.out.println(getEncryptString("tiger"));
